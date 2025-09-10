@@ -1,0 +1,1 @@
+This is a workshop proposed by the teacher in class. It includes POO and programming logic. My ID ends in 8, and the exercises to be completed are 29: Bridges of Madison and 36: Harvesting on Horseback, respectively. They will be do in C#
