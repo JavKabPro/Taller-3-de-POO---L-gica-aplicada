@@ -1,59 +1,49 @@
-﻿using System.ComponentModel;
-
-var itString = string.Empty;
-
+﻿using System;
+var itString = string.Empty;                                        //Initialize the input string.
 do
 {
-    Console.Write("Ingrese puente (0 'salir para terminar): ");
-    itString = Console.ReadLine();
-    if (itString!.ToLower() == "salir")
+    Console.Write("Ingrese puente (o pulse 'salir' para terminar): ");
+    itString = Console.ReadLine();                                  //Read the input string.
+    if (itString!.ToLower() == "salir")                             //If the input is "salir", exit the loop.
         break;
     
     bool isValid = itString.Length >= 2 && itString.StartsWith("*")&& itString.EndsWith("*");   //It must start and end with '*'.
+    string inside = string.Empty;                                       //If the first a part of first rule pass, continue. (1.Rule)   
     if (isValid)
-    {
-        string inside = itString.Substring(1, itString.Length - 2);     //Get and verify the inside part of the string.
-        if (inside.Contains("*"))                                                               //It must not contain '*'.
-        {
+        inside = itString.Substring(1, itString.Length - 2);            //Get and verify the inside part of the string.
+        
+        if (inside.Contains("*"))                                       //It must not contain '*'.
             isValid = false;
-        }
-    }
+   
+        if (isValid && inside.Contains("*"))
+            isValid = false;                                            //It must not contain '*'.
     if (isValid)
     {
-        string inside = itString.Substring(1, itString.Length - 2);     //Get the inside part of the string again.
-        for (int i = 0; i < inside.Length - 1; i++)                     //Iterate for, through the inside part of the string.                                 
+        for (int i = 0; i < inside.Length - 1; i++)                 //Iterate for, through the inside part of the string. (2. rulle)                                
         {
-            if (inside[i] == '=' && inside[i+1] =='=')
+            if (inside[i] == '=' && inside[i + 1] == '=')                //If there are two '=' in a row, it is invalid.
             {
-                bool lOk = false;
-                bool rOk = false;
-                if (i > 0 && inside[i - 1] == '+')
-                {
-                    lOk = true;
-                }
-                if (i + 2 < inside.Length && inside[i + 2] == '+')
-                {
-                    rOk = true;
-                }
-                if (!(lOk || rOk))
+                bool lOk = (i > 0 && inside[i - 1] == '+'); ;           //Check if there is a '+' to the left.
+                bool rOk = (i + 2 < inside.Length && inside[i + 2] == '+'); //Verify if there is a '+' to the right.
+                if (!(lOk || rOk))                                      //If there is no '+' on either side, it is invalid.
                 {
                     isValid = false;
                     break;                                              //Unnecessary to continue checking.
                 }
             }
+
         }
     }
     if (isValid)
     {
-        string inside = itString.Substring(1, itString.Length - 2);
-        int countRef = 0;
-        int mid = inside.Length / 2;
-        for (int i = 0; i < inside.Length - 2; i++)
+        int countRef = 0;                               //Count the number of '===' references.
+        int mid = inside.Length / 2;                    //Calculate the middle.
+        for (int i = 0; i < inside.Length - 2; i++)     //Iterate through the inside part of the string. (3.Rule)
         {
-            if (inside[i] == '=' && inside[i + 1] == '=' && inside[i + 2] == '=')
+            if (inside[i] == '=' && inside[i + 1] == '=' && inside[i + 2] == '=')   //The reference === must be in the middle.
             {
-                countRef++;
-                if (i != mid - 1)
+                countRef++;                             //Count the number of references.
+                if (i != mid - 1)                       //If the reference is not in the middle, it is invalid.
                 {
                     isValid = false;
                     break;
@@ -67,10 +57,9 @@ do
     }
     if (isValid)
     {
-        string inside = itString.Substring(1, itString.Length - 2);
-        for (int i = 0; i < inside.Length / 2; i++)
+        for (int i = 0; i < inside.Length / 2; i++)             //Check for symmetry. (4.Rule)
         {
-            if (inside[i] != inside[inside.Length - 1 - i])
+            if (inside[i] != inside[inside.Length - 1 - i])     //If the characters are not the same, it is invalid.
             {
                 isValid = false;
                 break;
