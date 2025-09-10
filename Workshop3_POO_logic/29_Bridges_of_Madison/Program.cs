@@ -1,4 +1,6 @@
-﻿var itString = string.Empty;
+﻿using System.ComponentModel;
+
+var itString = string.Empty;
 
 do
 {
@@ -8,6 +10,14 @@ do
         break;
     
     bool isValid = itString.Length >= 2 && itString.StartsWith("*")&& itString.EndsWith("*");
+    if (isValid)
+    {
+        string inside = itString.Substring(1, itString.Length - 2);
+        if (inside.Contains("*")) 
+        {
+            isValid = false;
+        }
+    }
     
     if (isValid)
     {
@@ -15,9 +25,9 @@ do
     }
     else
     {
-        Console.WriteLine($"El número {itString}, es INVALIDO.");
+        Console.WriteLine($"El puente {itString}, es INVALIDO.");
     }
-      
+
 } while (true);
 Console.WriteLine("Game Over.");
     
