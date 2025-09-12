@@ -1,29 +1,25 @@
 ﻿using System;
 class HarvestingOnHorseback
 {
+
     static void Main(string[] args)
     {
-        Console.Write("Ingrese ubicación de los frutos: ");         //Input the location of the fruits.
+        Console.Write("Ingrese ubicación de los frutos: ");         
         string? pos = Console.ReadLine();
         if (pos == null) pos = "";
-        Console.Write("Ingrese ubicación del caballo: ");           //Input the location of the horse in the chessboard.
+        Console.Write("Ingrese ubicación del caballo: ");           
         string? horse = Console.ReadLine();
         if (horse == null) horse = "";
-        Console.Write("Ingrese los movimientos de caballo: ");      //Input the horse moves. Put UR, UL, DR, DL, RU, RD, LU, LD...
+        Console.Write("Ingrese los movimientos de caballo: ");     
         string? moves = Console.ReadLine();
         if (moves == null) moves = "";
 
-        char[,] chess = new char[8, 8];                             //Create an 8x8 chessboard.
+        char[,] chess = new char[8, 8];                             
         for (int r = 0; r < 8; r++)
-        {
-            for (int c = 0; c < 8; c++)
-            {
-                chess[r, c] = ' ';
-            }
-        }
-
+             for (int c = 0; c < 8; c++)
+                 chess[r, c] = ' ';
+      
         int n = pos.Length, idx = 0;
-        char row, col, fruit;
         while (idx < n)
         {
             if (pos[idx] == ',')
@@ -31,98 +27,79 @@ class HarvestingOnHorseback
                 idx++;
                 continue;
             }
+            char col = pos[idx];
+            char row = pos[idx + 1];
+            char fruit = pos[idx + 2];
 
-            if (idx + 2 < n)
-            {
-                col = pos[idx];
-                row = pos[idx + 1];
-                fruit = pos[idx + 2];
-
-                int rr = er(row);
-                int cc = ec(col);
-                if (rr >= 0 && cc >= 0)
-                    chess[rr, cc] = fruit;
-
-                idx += 3;
-            }
+            chess[er(row), ec(col)] = fruit;
+            idx += 3;
         }
 
-        row = horse[1];
-        col = horse[0];
-        int posRow = er(row);
-        int posCol = ec(col);
-        string harvest = "";
+            char  rowH = horse[1];
+            char colH = horse[0];
+            int posRow = er(rowH);
+            int posCol = ec(colH);
+            string harvest = "";
 
         if (chess[posRow, posCol] != ' ')
         {
             harvest += chess[posRow, posCol];
             chess[posRow, posCol] = ' ';
         }
-
-        n = moves.Length;
-        idx = 0;
-        while (idx < n)
+        
+        string[] movimientos = moves.Split(',', StringSplitOptions.RemoveEmptyEntries);
+        foreach (string motion in movimientos)
         {
-            if (idx + 1 < n)
+            switch (motion)
             {
-                string[] movimientos = moves.Split(',', StringSplitOptions.RemoveEmptyEntries);
-
-                foreach (string motion in movimientos)
-                {
-                    switch (motion)
-                    {
-                        case "UL":
-                            posRow -= 2;
-                            posCol -= 1;
-                            break;
-                        case "UR":
-                            posRow -= 2;
-                            posCol += 1;
-                            break;
-                        case "LU":
-                            posRow -= 1;
-                            posCol -= 2;
-                            break;
-                        case "LD":
-                            posRow += 1;
-                            posCol -= 2;
-                            break;
-                        case "RU":
-                            posRow -= 1;
-                            posCol += 2;
-                            break;
-                        case "RD":
-                            posRow += 1;
-                            posCol += 2;
-                            break;
-                        case "DL":
-                            posRow += 2;
-                            posCol -= 1;
-                            break;
-                        case "DR":
-                            posRow += 2;
-                            posCol += 1;
-                            break;
-                    }
-
-                    if (posRow >= 0 && posRow < 8 && posCol >= 0 && posCol < 8 && chess[posRow, posCol] != ' ')
-                    {
-                        harvest += chess[posRow, posCol];
-                        chess[posRow, posCol] = ' ';
-                    }
-                }
-                idx += 2;
-
-                if (posRow >= 0 && posRow < 8 && posCol >= 0 && posCol < 8 && chess[posRow, posCol] != ' ')
-                {
-                    harvest += chess[posRow, posCol];
-                    chess[posRow, posCol] = ' ';
-                }
+                case "UL":
+                    posRow -= 2;
+                    posCol -= 1;
+                    break;
+                case "UR":
+                    posRow -= 2;
+                    posCol += 1;
+                    break;
+                case "LU":
+                    posRow -= 1;
+                    posCol -= 2;
+                    break;
+                case "LD":
+                    posRow += 1;
+                    posCol -= 2;
+                    break;
+                case "RU":
+                    posRow -= 1;
+                    posCol += 2;
+                    break;
+                case "RD":
+                    posRow += 1;
+                    posCol += 2;
+                    break;
+                case "DL":
+                    posRow += 2;
+                    posCol -= 1;
+                    break;
+                case "DR":
+                    posRow += 2;
+                    posCol += 1;
+                    break;
             }
-        }
+            if (posRow >= 0 && posRow < 8 && posCol >= 0 && posCol < 8 && chess[posRow, posCol] != ' ')
+            {
+                harvest += chess[posRow, posCol];
+                chess[posRow, posCol] = ' ';
+            }
+        }   
+        
         Console.WriteLine("Los frutos recogidos son: " + harvest);
     }
-
+    /// <summary>
+    /// Converts a character representing a numeric value into its corresponding zero-based index.
+    /// </summary>
+    /// <param name="r">A character representing a numeric value between '1' and '8'.</param>
+    /// <returns>The zero-based index corresponding to the input character, where '8' maps to 0, '7' maps to 1, and go until '1' maps to 7.
+    ///For now, the program can only be passed these values, otherwise it returns -1, represent rows of chess .</returns>
     public static int er(char r)
     {
         switch (r)
@@ -138,7 +115,11 @@ class HarvestingOnHorseback
         }
         return -1;
     }
-
+    /// <summary>
+    /// This method converts a character representing a column from 'A' to 'H', into its corresponding zero-based index.
+    /// </summary>
+    /// <param name="c">A character represent columns of chess </param>
+    /// <returns></returns>
     public static int ec(char c)
     {
         switch (c)
